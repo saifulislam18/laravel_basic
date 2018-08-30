@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTermsTable extends Migration
+class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateTermsTable extends Migration
      */
     public function up()
     {
-        Schema::create('terms', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
-            $table->tinyInteger('user_id');
-            $table->string('slug');
+            $table->unsignedInteger('post_id');
+            $table->string('path');
             $table->string('type');
-            $table->string('name');
-            $table->softDeletes();
+            $table->foreign('post_id')
+                ->references('id')->on('posts')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateTermsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('terms');
+        Schema::dropIfExists('files');
     }
 }

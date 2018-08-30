@@ -29,6 +29,9 @@
             $required=isset($inputField['required'])?'required':'';
 
             $value=$inputField['value']?? null;
+
+
+
             $labelPlaceholder=$inputField['label_place']??ucfirst($name);
             $inputPlaceholder=$inputField['input_place']??ucfirst($name);
             $labelClass=$inputField['label_class']??'';
@@ -40,8 +43,8 @@
 
             if ($type=='password'){
                 $field=Form::$type($name,['placeholder'=>$inputPlaceholder,'class' => $inputClass,'id'=>$name,$required]);
-            }elseif($type=='select'){
-                $field=Form::$type($name,$value,null,['class'=>$inputClass,'id'=>$name,$required]);
+            }elseif($type=='checkbox'){
+                $field=Form::$type($name,$value,null,['class'=>$inputClass,'id'=>$name,$required]).$value;
             }elseif($type=='file'){
                 $field=Form::$type($name,['class'=>$inputClass,'id'=>$name,$required]);
 
@@ -53,6 +56,11 @@
                     }
                 }
 
+            }elseif($type=='textarea'){
+                $field=Form::$type($name,$value,['placeholder'=>$inputPlaceholder,'class' => $inputClass,'id'=>$name,$required,'rows'=>$inputField['rows']??5]);
+            }elseif($type=='select'){
+//                dd($value);
+                $field=Form::$type($name,$value,$inputField['selected']??'publish',['class' => $inputClass,'id'=>$name,$required]);
             }else{
                 $field=Form::$type($name,$value,['placeholder'=>$inputPlaceholder,'class' => $inputClass,'id'=>$name,$required]);
             }
@@ -73,11 +81,15 @@
 
 
         }
-        public function rawInput($inputData){
+        public static function rawInput($inputData){
             echo $inputData;
         }
         public function submit($submit=array()){
+
             echo Form::submit($submit['value']??'Add',['class'=>$submit['class']??null]);
+            if (isset($submit['wrapper'])){
+                echo $submit['wrapper'];
+            }
             echo Form::close();
         }
     }

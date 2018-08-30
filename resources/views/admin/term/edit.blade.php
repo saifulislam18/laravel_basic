@@ -72,6 +72,10 @@ $title=' - '.$dirName.' '.$fileName;
         $formBuilder=new \App\Http\Lib\FormBuilder($formInfo,$term);
 
         $fieldArr=array(
+            'slug'=>[
+                'type'=>'text',
+                'required'=>1
+            ],
             'name'=>[
                 'type'=>'text',
                 'required'=>1

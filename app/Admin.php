@@ -42,4 +42,17 @@ class Admin extends Authenticatable
     public function role(){
         return $this->belongsTo('App\Role');
     }
+
+    public function posts()
+    {
+        return $this->hasMany('App\Model\Post','user_id');
+    }
+
+
+    protected static function boot() {
+        parent::boot();
+        static::deleting(function(Admin $user) {
+            $user->posts()->forceDelete();
+        });
+    }
 }

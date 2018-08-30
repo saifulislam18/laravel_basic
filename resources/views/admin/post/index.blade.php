@@ -45,7 +45,7 @@ $title = ' - ' . $dirName . ' List';
     @if(Auth::guard('admin')->user()->role_id==1)
 
 
-    <form  id="selectionForm" action="{{route('term.trashmultiple')}}" method="post">
+    <form  id="selectionForm" action="{{route('post.trashmultiple')}}" method="post">
 
         @csrf
         @endif
@@ -58,7 +58,7 @@ $title = ' - ' . $dirName . ' List';
                         </div>
                     @endif
                         <div class="col-md-1" style="margin: 0px 0px 0 20px">
-                            <a href="{{route('term.trash')}}" class="btn  btn-info btn-sm">View Trash List</a>
+                            <a href="{{route('post.trash')}}" class="btn  btn-info btn-sm">View Trash List</a>
                         </div>
                 </div>
         </div>
@@ -83,12 +83,13 @@ $title = ' - ' . $dirName . ' List';
                             {!! Form::checkbox(null,null,false,['id'=>'select_all']) !!}
                         </th>
                     @endif
-                    <th>SL</th>
-                    <th>Slug</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Created By</th>
-                    <th>Action</th>
+                        <th>SL</th>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th>Category</th>
+                        <th>Thumbnail</th>
+                        <th>Author</th>
+                        <th>Action</th>
                 </tr>
                 </thead>
             </table>
@@ -109,15 +110,16 @@ $title = ' - ' . $dirName . ' List';
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('term.datalist') }}',
+                ajax: '{{ route('post.datalist') }}',
                 columns: [
                     @if(Auth::guard('admin')->user()->role_id==1)
                     {data: 'multiple', orderable: false},
                     @endif
                     {data: 'rownum'},
-                    {data: 'slug',name:'slug'},
-                    {data: 'name', name: 'name'},
-                    {data: 'type', name: 'email'},
+                    {data: 'title', name: 'title'},
+                    {data: 'content', name: 'content'},
+                    {data: 'category', name: 'category'},
+                    {data: 'thumbnail'},
                     {data: 'user'},
                     {data: 'action'}
                 ]
@@ -152,7 +154,7 @@ $title = ' - ' . $dirName . ' List';
         });
 
         $(document).on('click', '.delete', function() {
-            return confirm('are you sure to delete the term?');
+            return confirm('are you sure to delete the post?');
         });
         function checkEmptySelection(){
             emptySelection =true;

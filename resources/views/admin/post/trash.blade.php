@@ -2,7 +2,7 @@
 $fileName = explode('.', $view);
 $dirName = ucfirst($fileName[1]);
 
-$title = ' - ' . $dirName . ' List';
+$title = ' - ' . $dirName . ' Trash List';
 ?>
 
 @extends('admin.layout.admin')
@@ -33,37 +33,41 @@ $title = ' - ' . $dirName . ' List';
                 <li class="breadcrumb-item">
                     <a href=""> <i class="fa fa-home"></i> Home</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">{{$dirName}} List</li>
+                <li class="breadcrumb-item">
+                    <a href="{{route('post.index')}}"> {{$dirName}} List</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{$dirName}} Trash List</li>
             </ol>
         </nav>
     </div>
 
     <div class="content-heading">
-        <h2 class="text-center">{{$dirName}} List</h2>
+        <h2 class="text-center">{{$dirName}} Trash List</h2>
     </div>
 
     @if(Auth::guard('admin')->user()->role_id==1)
 
 
-    <form  id="selectionForm" action="{{route('term.trashmultiple')}}" method="post">
+        <form  id="selectionForm" action="{{route('post.recovermultiple')}}" method="post">
 
-        @csrf
-        @endif
+            @csrf
+            @endif
 
-        <div style="padding: 20px">
+            <div style="padding: 20px">
                 <div class="row">
                     @if(Auth::guard('admin')->user()->role_id==1)
-                        <div class="col-md-1" style="margin: 0px 10px 0 0">
-                            <input class="btn  btn-danger btn-sm" type="submit" id="trashMultipleButton" value="Trashed Multiple">
+                        <div class="col-md-1">
+                            <input class="btn  btn-info btn-sm" type="submit" id="recoverMultipleButton" value="Recover">
+                        </div>
+                        <div class="col-md-1">
+                            <input class="btn  btn-danger btn-sm" type="button" id="deleteMultipleButton" value="Delete">
                         </div>
                     @endif
-                        <div class="col-md-1" style="margin: 0px 0px 0 20px">
-                            <a href="{{route('term.trash')}}" class="btn  btn-info btn-sm">View Trash List</a>
-                        </div>
+                    <div class="col-md-1">
+                        <a href="{{route('post.index')}}" class="btn  btn-success btn-sm">View Active List</a>
+                    </div>
                 </div>
-        </div>
-
-
+            </div>
 
         @if(Session::has('s_msg'))
             <p class="alert alert-success msg">{{session('s_msg')}}</p>
@@ -83,12 +87,13 @@ $title = ' - ' . $dirName . ' List';
                             {!! Form::checkbox(null,null,false,['id'=>'select_all']) !!}
                         </th>
                     @endif
-                    <th>SL</th>
-                    <th>Slug</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Created By</th>
-                    <th>Action</th>
+                        <th>SL</th>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th>Category</th>
+                        <th>Thumbnail</th>
+                        <th>Author</th>
+                        <th>Action</th>
                 </tr>
                 </thead>
             </table>
@@ -109,15 +114,17 @@ $title = ' - ' . $dirName . ' List';
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('term.datalist') }}',
+                ajax: '{{ route('post.datalist','trash') }}',
                 columns: [
+
                     @if(Auth::guard('admin')->user()->role_id==1)
                     {data: 'multiple', orderable: false},
                     @endif
                     {data: 'rownum'},
-                    {data: 'slug',name:'slug'},
-                    {data: 'name', name: 'name'},
-                    {data: 'type', name: 'email'},
+                    {data: 'title', name: 'title'},
+                    {data: 'content', name: 'content'},
+                    {data: 'category', name: 'category'},
+                    {data: 'thumbnail'},
                     {data: 'user'},
                     {data: 'action'}
                 ]
@@ -128,7 +135,6 @@ $title = ' - ' . $dirName . ' List';
 </script>
 <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-
 
 @if(Auth::guard('admin')->user()->role_id==1)
 
@@ -151,8 +157,8 @@ $title = ' - ' . $dirName . ' List';
             }
         });
 
-        $(document).on('click', '.delete', function() {
-            return confirm('are you sure to delete the term?');
+        $(document).on('click', '.delete_permanently', function() {
+            return confirm('are you sure to delete the post permanently?');
         });
         function checkEmptySelection(){
             emptySelection =true;
@@ -162,17 +168,28 @@ $title = ' - ' . $dirName . ' List';
             return emptySelection;
         }
 
-        function confirmation() {
-            return confirm('Are You Sure To Trash The Selected Rows?');
-        }
-
-        $("#trashMultipleButton").click(function(){
+        $("#recoverMultipleButton").click(function(){
             if(checkEmptySelection()){
                 alert("Empty Selection! Please select some record(s) first")
                 return false;
             }else{
 
+                $("#selectionForm").submit();
+
+            }
+        }) ;
+
+        function confirmation() {
+            return confirm('Are You Sure To Permanently Delete all Selected Rows???');
+        }
+
+        $("#deleteMultipleButton").click(function(){
+            if(checkEmptySelection()){
+                alert("Empty Selection! Please select some record(s) first")
+                return false;
+            }else{
                 if (confirmation()){
+                    $("#selectionForm").attr('action','{{route('post.deletemultiple')}}')
                     $("#selectionForm").submit();
                 }else {
                     event.preventDefault();

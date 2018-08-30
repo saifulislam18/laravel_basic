@@ -88,6 +88,7 @@ $title = ' - ' . $dirName . ' Trash List';
                         </th>
                     @endif
                     <th>SL</th>
+                    <th>Slug</th>
                     <th>Name</th>
                     <th>Type</th>
                     <th>Created By</th>
@@ -119,6 +120,7 @@ $title = ' - ' . $dirName . ' Trash List';
                     {data: 'multiple', orderable: false},
                     @endif
                     {data: 'rownum'},
+                    {data: 'slug',name:'slug'},
                     {data: 'name', name: 'name'},
                     {data: 'type', name: 'email'},
                     {data: 'user'},

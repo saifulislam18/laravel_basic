@@ -32,7 +32,7 @@ class AdminController extends Controller
             $admin['username']=strtolower('msisaiful');
             $admin['role_id']=1;
             $admin['email']='msisaifulsaif@gmail.com';
-            $admin['password']=Hash::make('L@r@vel');
+            $admin['password']=Hash::make('123456');
             $admin['status']='active';
             Admin::create($admin);
         }

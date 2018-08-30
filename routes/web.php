@@ -68,6 +68,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('user/dataList', 'AdminController@adminDataListApi')->name('admin.datalist');
 
         //Term
+
         Route::get('term/dataList/{status?}', 'Term\TermController@termDataListApi')->name('term.datalist');
         Route::get('term/trash', 'Term\TermController@trash')->name('term.trash');
 
@@ -76,5 +77,20 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('term/recovermultiple', 'Term\TermController@recoverMultiple')->name('term.recovermultiple');
 
         Route::resource('term','Term\TermController');
+
+        //Term
+
+        //Post
+
+        Route::get('post/dataList/{status?}', 'Post\PostController@postDataListApi')->name('post.datalist');
+        Route::get('post/trash', 'Post\PostController@trash')->name('post.trash');
+
+        Route::post('post/deletemultiple', 'Post\PostController@destroyMultiple')->name('post.deletemultiple');
+        Route::post('post/trashmultiple', 'Post\PostController@trashMultiple')->name('post.trashmultiple');
+        Route::post('post/recovermultiple', 'Post\PostController@recoverMultiple')->name('post.recovermultiple');
+
+        Route::resource('post','Post\PostController');
+
+        //Post
     });
 });

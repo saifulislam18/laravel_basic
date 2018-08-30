@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTermsTable extends Migration
+class CreateSeosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateTermsTable extends Migration
      */
     public function up()
     {
-        Schema::create('terms', function (Blueprint $table) {
+        Schema::create('seos', function (Blueprint $table) {
             $table->increments('id');
-            $table->tinyInteger('user_id');
-            $table->string('slug');
-            $table->string('type');
-            $table->string('name');
-            $table->softDeletes();
+            $table->unsignedInteger('post_id');
+            $table->text('description');
+            $table->text('keywords')->nullable();
+            $table->string('title');
+            $table->foreign('post_id')
+                ->references('id')->on('posts')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ class CreateTermsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('terms');
+        Schema::dropIfExists('seos');
     }
 }
